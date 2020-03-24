@@ -1,0 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ConsoleApp1
+{
+    class TimeNote:Note
+    {
+        DateTime time = DateTime.Now;
+        public DateTime Time
+        {
+
+            get { return this.time; }
+            set { this.time = value; }
+
+
+        }
+        public TimeNote() : base() { this.time = DateTime.Now; }
+        public TimeNote(String text, String author, int importance, DateTime time)
+            : base(text, author, importance)
+        {
+            this.time = time;
+        }
+        public override string ToString()
+        {
+            return base.ToString() + this.time;
+        }
+    }
+
+}
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ConsoleApp1
+{
+    class Note
+    {
+        private string text;
+        private string author;
+        private int importance;
+
+        public string Text
+        {
+            get { return this.text; }
+            set { this.text = value; }
+        }
+        public string Author
+        {
+            get { return this.author; }
+            set { this.author = value; }
+        }
+        public int Importance
+        {
+            get { return this.importance; }
+        }
+        public Note() { this.text = "biljeska"; this.author = "dominik"; this.importance = 0; }
+        public Note(string Text, string Author, int Importance) { this.text = Text; this.author = Author; this.importance = Importance; }
+        public Note(string Text, string Author) { this.text = Text; this.Author = Author; this.importance = 10; }
+        public override string ToString()
+        {
+            return (this.text + "," + this.author + "," + this.importance);
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp1
+{
+    
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            Note ja = new Note();
+            Note Dominik = new Note("domi", "addas", 10);
+            Note Domi = new Note("doms", "adsasd");
+
+            Console.WriteLine(ja.Text);
+            Console.WriteLine(Dominik.Importance);
+            Console.WriteLine(Domi.ToString());
+            TimeNote note = new TimeNote();
+            Console.WriteLine(note.Time);
+            Console.WriteLine(note.ToString());
+        }
+    }
+}
