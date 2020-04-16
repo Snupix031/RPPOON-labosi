@@ -1,0 +1,219 @@
+1. zadatak 
+class Program
+    {
+        static void Main(string[] args)
+        {
+            DiceRoller diceRoller = new DiceRoller();
+            const int numberOfDice = 20;
+            for (int i = 0; i < numberOfDice; i++)
+            {
+                diceRoller.InsertDie(new Die(6));
+            }
+            diceRoller.RollAllDice();
+            System.Collections.Generic.IList<int> results = diceRoller.GetRollingResults();
+            foreach (int result in results)
+            {
+                Console.WriteLine(result);
+            }
+        }
+    }
+
+2. zadatak
+class Die
+    {
+        private int numberOfSides;
+        private int rolledNumber;
+        private Random randomGenerator;
+
+
+        public Die(int numberOfSides, Random randomGenerator)
+        {
+            this.numberOfSides = numberOfSides;
+            this.randomGenerator = randomGenerator;
+        }
+        public int Roll()
+        {
+            rolledNumber = randomGenerator.Next(1, numberOfSides + 1);
+            return rolledNumber;
+        }
+    }
+class Program
+    {
+        static void Main(string[] args)
+        {
+            DiceRoller diceRoller = new DiceRoller();
+            Random randomGenerator = new Random();
+            const int numberOfDice = 20;
+            for (int i = 0; i < numberOfDice; i++)
+            {
+                diceRoller.InsertDie(new Die(6), Random randomGenerator);
+            }
+            diceRoller.RollAllDice();
+            System.Collections.Generic.IList<int> results = diceRoller.GetRollingResults();
+            foreach (int result in results)
+            {
+                Console.WriteLine(result);
+            }
+        }
+    }
+
+3.zadatak
+ class Die
+    {
+        private int numberOfSides;
+        private RandomGenerator randomGenerator;
+        public Die(int numberOfSides)
+        {
+            this.numberOfSides = numberOfSides;
+            this.randomGenerator = RandomGenerator.GetInstance();
+        }
+        public int Roll()
+        {
+            return this.randomGenerator.NextInt(1, numberOfSides + 1);
+        }
+    }
+4.zadatak
+class ConsoleLogger: ILogger
+    {
+        public void Log(string message)
+        {
+            Console.WriteLine(message);
+        }
+    }
+class FileLogger: ILogger
+    {
+        private string filePath;
+        public FileLogger(string filePath)
+        {
+            this.filePath = filePath;
+        }
+        public void Log(string message)
+        {
+            using (System.IO.StreamWriter fileWriter =
+            new System.IO.StreamWriter(this.filePath, true))
+
+            {
+                fileWriter.WriteLine(message);
+            }
+        }
+    }
+class DiceRoller
+    {
+        private List<Die> dice;
+        private List<int> resultForEachRoll;
+        private ILogger logger;
+        public DiceRoller()
+        {
+            this.dice = new List<Die>();
+            this.resultForEachRoll = new List<int>();
+        }
+        public void InsertDie(Die die)
+        {
+            dice.Add(die);
+        }
+        public void RollAllDice()
+        {
+           
+            this.resultForEachRoll.Clear();
+            foreach (Die die in dice)
+            {
+                this.resultForEachRoll.Add(die.Roll());
+            }
+        }
+      
+        public IList<int> GetRollingResults()
+        {
+            return new System.Collections.ObjectModel.ReadOnlyCollection<int>(
+           this.resultForEachRoll
+           );
+        }
+
+        public int DiceCount
+        {
+            get { return dice.Count; }
+
+        }
+        public void SetLogger(ILogger logger)
+        {
+            this.logger = logger;
+        }
+        public void LogRollingResults()
+        {
+            foreach (int result in this.resultForEachRoll)
+            {
+                logger.Log(result.ToString());
+            }
+        }
+    }
+5. zadatak
+   class ConsoleLogger: ILogger
+    {
+        public void Log(ILogable data)
+        {
+            Console.WriteLine(data.GetStringRepresentation());
+        }
+    }
+}
+class FileLogger: ILogger
+    {
+        private string filePath;
+        public FileLogger(string filePath)
+        {
+            this.filePath = filePath;
+        }
+        public void Log(ILogable data)
+        {
+            using (System.IO.StreamWriter fileWriter =
+            new System.IO.StreamWriter(this.filePath, true))
+
+            {
+                fileWriter.WriteLine(data.GetStringRepresentation());
+            }
+        }
+    }
+class DiceRoller: ILogable
+    {
+        private List<Die> dice;
+        private List<int> resultForEachRoll;
+        public DiceRoller()
+        {
+            this.dice = new List<Die>();
+            this.resultForEachRoll = new List<int>();
+        }
+        public virtual void InsertDie(Die die)
+        {
+            dice.Add(die);
+        }
+        public virtual void RollAllDice()
+        {
+            this.resultForEachRoll.Clear();
+            foreach (Die die in dice)
+            {
+                this.resultForEachRoll.Add(die.Roll());
+            }
+        }
+        public virtual void RemoveAllDice()
+        {
+            this.dice.Clear();
+            this.resultForEachRoll.Clear();
+        }
+        public IList<int> GetRollingResults()
+        {
+
+            return new System.Collections.ObjectModel.ReadOnlyCollection<int>(this.resultForEachRoll);
+
+        }
+        public int DiceCount
+        {
+            get { return dice.Count; }
+        }
+        public string GetStringRepresentation()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (int result in this.resultForEachRoll)
+            {
+                stringBuilder.Append(result.ToString()).Append("\n");
+            }
+            return stringBuilder.ToString();
+        }
+    }
