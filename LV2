@@ -1,4 +1,55 @@
 1. zadatak 
+class Die
+    {
+        private int numberOfSides;
+        private Random randomGenerator;
+        private int rolledNumber;
+        public Die(int numberOfSides)
+        {
+            this.numberOfSides = numberOfSides;
+            this.randomGenerator = new Random();
+        }
+        public int Roll()
+        {
+            rolledNumber = randomGenerator.Next(1, numberOfSides + 1);
+            return rolledNumber;
+        }
+    }
+class DiceRoller
+    {
+        private List<Die> dice;
+        private List<int> resultForEachRoll;
+        public DiceRoller()
+        {
+            this.dice = new List<Die>();
+            this.resultForEachRoll = new List<int>();
+        }
+        public void InsertDie(Die die)
+        {
+            dice.Add(die);
+        }
+        public void RollAllDice()
+        {
+            
+            this.resultForEachRoll.Clear();
+            foreach (Die die in dice)
+            {
+                this.resultForEachRoll.Add(die.Roll());
+            }
+        }
+        
+        public IList<int> GetRollingResults()
+        {
+            return new System.Collections.ObjectModel.ReadOnlyCollection<int>(
+           this.resultForEachRoll
+           );
+        }
+        public int DiceCount
+        {
+            get { return dice.Count; }
+        }
+
+    }
 class Program
     {
         static void Main(string[] args)
@@ -58,6 +109,27 @@ class Program
     }
 
 3.zadatak
+ class RandomGenerator
+    {
+        private static RandomGenerator instance; //unique instance
+        private Random random;
+        private RandomGenerator()
+        {
+            this.random = new Random();
+        }
+        //lazy instatation
+        public static RandomGenerator GetInstance()
+        {
+            if (instance == null)
+                instance = new RandomGenerator();
+            return instance;
+        }
+        public int NextInt(int lowerBound, int upperBound)
+        {
+            return random.Next(lowerBound, upperBound);
+        }
+    }
+
  class Die
     {
         private int numberOfSides;
@@ -73,6 +145,35 @@ class Program
         }
     }
 4.zadatak
+interface ILogger
+ {
+ void Log(string message);
+ }
+class Logger
+    {
+        private string type;
+        private string filePath;
+        public Logger(string type, string filePath)
+        {
+            this.type = type;
+            this.filePath = filePath;
+        }
+        public void Log(string message)
+        {
+            if (this.type.Equals("Console"))
+                Console.WriteLine(message);
+            else if (this.type.Equals("File"))
+                using (System.IO.StreamWriter writer =
+                new System.IO.StreamWriter(this.filePath))
+
+                {
+                    writer.WriteLine(message);
+                }
+            else
+                throw new ArgumentException("Unkown type");
+        }
+    }
+
 class ConsoleLogger: ILogger
     {
         public void Log(string message)
@@ -145,7 +246,18 @@ class DiceRoller
             }
         }
     }
+
 5. zadatak
+interface ILogger
+    {
+        void Log(ILogable data);
+    }
+
+interface ILogable
+    {
+        string GetStringRepresentation();
+    }
+
    class ConsoleLogger: ILogger
     {
         public void Log(ILogable data)
